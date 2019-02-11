@@ -3,21 +3,23 @@ package com.company.todolist;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class App {
-    static Scanner sc = new Scanner(System.in);
-    List<Task> todolist = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+    private List<Task> todolist = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         App app = new App();
         try {
-            List<String> lines = Files.readAllLines(Paths.get("C:/Program Files (x86)/Programowanie/text.txt"));
+            List<String> lines = Files.readAllLines(Paths.get("text.txt"));
             for (int i = 1; i <= 3; i++) {
                 System.out.println("Enter login: ");
-                String loginByUser = sc.nextLine();
+                String loginByUser = scanner.nextLine();
                 System.out.println("Enter password: ");
-                String passwordByUser = sc.nextLine();
+                String passwordByUser = scanner.nextLine();
                 if (loginByUser.equals(lines.get(0)) && (passwordByUser.equals(lines.get(1)))) {
                     System.out.println("You managed to log in.");
                     i = 10;
@@ -28,41 +30,53 @@ public class App {
                 }
             }
         } catch (IOException ex) {
-            System.out.println("error");
+            System.out.println("error" + ex);
         }
     }
 
-    public void run() {
+    private void run() {
         System.out.println("Welcome in your private ToDoList!");
         System.out.println("Write 'help' to display the commands which you can use.");
-        String command = sc.nextLine();
-        while (!command.equals("exit")) {
+
+        Action command = readCommand();
+
+        while (command != null) {
+
             switch (command) {
-                case "add":
+                case ADD:
                     addTask();
                     break;
-                case "remove":
+                case REMOVE:
                     removeTask();
                     break;
-                case "list":
+                case LIST:
                     listTasks();
                     break;
-                case "complete":
+                case COMPLETE:
                     completeTask();
                     break;
-                case "help":
-                    helpTask();
+                case HELP:
+                    printHelp();
                     break;
-                default:
-                    System.out.println("Invalid command");
-                    break;
+                case EXIT:
+                    System.exit(0);
             }
-            command = sc.nextLine();
+
+            command = readCommand();
+        }
+    }
+
+    private Action readCommand() {
+        try {
+            return Action.valueOf(scanner.nextLine().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid command");
+            return readCommand();
         }
     }
 
     private void addTask() {
-        String task = sc.nextLine();
+        String task = scanner.nextLine();
         todolist.add(new Task(task));
     }
 
@@ -73,21 +87,21 @@ public class App {
     }
 
     private void completeTask() {
-        String word = sc.nextLine();
+        String word = scanner.nextLine();
         int id = Integer.parseInt(word);
         Task task = todolist.get(id);
-        task.setDone();
+        task.setDone(true);
     }
 
     private void removeTask() {
-        String word = sc.nextLine();
+        String word = scanner.nextLine();
         int id = Integer.parseInt(word);
         todolist.remove(id);
     }
 
-    private void helpTask() {
-        for (Task.Help dnm : Task.Help.values()) {
-            System.out.println(dnm);
+    private void printHelp() {
+        for (Action action : Action.values()) {
+            System.out.println(action);
         }
     }
 }
