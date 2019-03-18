@@ -1,15 +1,17 @@
 package com.company.todolist;
 
+import com.company.todolist.db.DataBase;
+import com.company.todolist.db.InMemoryDataBase;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class App {
     private static Scanner scanner = new Scanner(System.in);
-    private List<Task> todolist = new ArrayList<>();
+    DataBase database = new InMemoryDataBase();
 
     public static void main(String[] args) {
         App app = new App();
@@ -77,11 +79,11 @@ public class App {
 
     private void addTask() {
         String task = scanner.nextLine();
-        todolist.add(new Task(task));
+        database.save(new Task(task));
     }
 
     private void listTasks() {
-        for (Task task : todolist) {
+        for (Task task : database.getAll()) {
             System.out.println(task);
         }
     }
@@ -89,14 +91,14 @@ public class App {
     private void completeTask() {
         String word = scanner.nextLine();
         int id = Integer.parseInt(word);
-        Task task = todolist.get(id);
+        Task task = database.get(id);
         task.setDone(true);
     }
 
     private void removeTask() {
         String word = scanner.nextLine();
         int id = Integer.parseInt(word);
-        todolist.remove(id);
+        database.delete(id);
     }
 
     private void printHelp() {
