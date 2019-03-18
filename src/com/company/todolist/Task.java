@@ -22,6 +22,19 @@ public class Task {
         this.done = done;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getName() {
+        return name;
+    }
+    public boolean getDone() {
+        return done;
+    }
+
+    public Task() {
+    }
+
     @Override
     public String toString() {
         String sens = " ";

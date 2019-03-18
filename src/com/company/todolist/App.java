@@ -1,6 +1,7 @@
 package com.company.todolist;
 
 import com.company.todolist.db.DataBase;
+import com.company.todolist.db.InFileDataBase;
 import com.company.todolist.db.InMemoryDataBase;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ import java.util.Scanner;
 
 public class App {
     private static Scanner scanner = new Scanner(System.in);
-    DataBase database = new InMemoryDataBase();
+    DataBase database = new InFileDataBase();
 
     public static void main(String[] args) {
         App app = new App();
